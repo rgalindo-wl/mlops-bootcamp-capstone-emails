@@ -1,2 +1,2 @@
-# mlops-bootcamp-capstone-emails
+# Capstone E-mails models
 Capstone project for MLOps Bootcamp
