@@ -1,0 +1,10 @@
+# Capstone project Team 7
+version: "3.8"
+
+services:
+  model:
+    build:
+      context: ./model
+    volumes:
+      - ./model/data:/data
+
