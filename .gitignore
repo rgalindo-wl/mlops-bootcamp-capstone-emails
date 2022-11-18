@@ -1,0 +1,9 @@
+.idea/
+.terraform/
+plan*
+*.tfstate
+*.tfvars
+*.backup
+.DS_Store
+*.lock.hcl
+.log
