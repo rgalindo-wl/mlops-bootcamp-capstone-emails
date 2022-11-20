@@ -2,10 +2,15 @@ from src.utils import (get_raw_text, clean_column)
 import pandas as pd
 import os
 import email
+from nltk.corpus import stopwords
+import vaderSentiment
 
 
-dirname = '/app'
-filename = 'archivo.csv'
+analyser = SentimentIntensityAnalyzer()
+
+
+dirname = '/app/data'
+filename = 'emails.csv'
 
 e_namefile = os.path.join(dirname, filename)
 enron = pd.read_csv(e_namefile, nrows=200)
@@ -19,3 +24,13 @@ for key in headings:
 enron['body'] = list(map(get_raw_text, emails))
 enron['Subject_new'] = enron['Subject'].apply(clean_column)
 enron['body_new'] = enron['body'].apply(clean_column)
+
+tokenizer = RegexpTokenizer(r'\w+')
+words_descriptions = enron['body_new'].apply(tokenizer.tokenize)
+
+all_words = [word for tokens in words_descriptions for word in tokens]
+enron['description_lengths']= [len(tokens) for tokens in words_descriptions]
+VOCAB = sorted(list(set(all_words)))
+
+enron['scores'] = enron['body_new'].apply(lambda review: analyser.polarity_scores(review))
+enron['compound']  = enron['scores'].apply(lambda score_dict: score_dict['compound'])

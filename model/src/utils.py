@@ -8,6 +8,12 @@ import spacy
 import string 
 import email
 from nltk.corpus import stopwords
+nltk.download('stopwords')
+
+import vaderSentiment
+
+from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
+analyser = SentimentIntensityAnalyzer()
 
 
 def get_raw_text(emails):
@@ -52,3 +58,7 @@ def clean_column(data):
         return data
     return 'No Subject'
 
+def sentiment_analyzer_score(sentence):
+    score = analyser.polarity_scores(sentence)
+    print("{:-<40} {}".format(sentence, str(score)))
+    
