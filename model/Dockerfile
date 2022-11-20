@@ -31,4 +31,6 @@ COPY pyproject.toml poetry.lock ${APP_HOME}/
 
 RUN poetry install --no-dev
 
+EXPOSE 8888
+
 ENTRYPOINT [ "poetry", "run" ,"python" ]
