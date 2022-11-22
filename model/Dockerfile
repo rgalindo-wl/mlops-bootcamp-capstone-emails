@@ -30,6 +30,7 @@ RUN set -ex \
 COPY pyproject.toml poetry.lock ${APP_HOME}/
 
 RUN poetry install --no-dev
+RUN python -m spacy download en_core_web_sm
 
 EXPOSE 8888
 
