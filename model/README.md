@@ -1,5 +1,14 @@
 # Model 
 
+## Build
+
+```docker-compose build```
+
+## Run
+
+
+```docker-compose up --detach```
+
 To run jupyter notebook you can run
 
 ```docker-compose exec -T model /app/entrypoint4jupyter.sh```
