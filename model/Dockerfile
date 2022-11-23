@@ -34,6 +34,7 @@ RUN poetry install --no-dev
 RUN python -m spacy download en_core_web_sm
 
 EXPOSE 8888
+EXPOSE 8000
 
 COPY entrypoint4jupyter.sh ${APP_HOME}/
 

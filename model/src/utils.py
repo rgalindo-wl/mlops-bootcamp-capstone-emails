@@ -60,5 +60,6 @@ def clean_column(data):
 
 def sentiment_analyzer_score(sentence):
     score = analyser.polarity_scores(sentence)
-    print("{:-<40} {}".format(sentence, str(score)))
+    return score
+    #return "{:-<40} {}".format(sentence, str(score))
     

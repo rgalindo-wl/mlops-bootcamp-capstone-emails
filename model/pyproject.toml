@@ -16,6 +16,8 @@ ipykernel = "^6.17.1"
 jupyter-contrib-nbextensions = "^0.7.0"
 ipywidgets = "^8.0.2"
 plotnine = "^0.10.1"
+fastapi = "^0.87.0"
+uvicorn = {extras = ["standard"], version = "^0.20.0"}
 
 [tool.poetry.dev-dependencies]
 
