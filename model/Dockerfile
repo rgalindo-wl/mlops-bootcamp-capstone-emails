@@ -16,6 +16,7 @@ ENV APP_HOME=/app \
 
 ENV PATH="${POETRY_HOME}/bin:${PATH}"
 ENV PATH="${VENV_PATH}/bin:${PATH}"
+
 WORKDIR ${APP_HOME}
 
 RUN set -ex \
@@ -33,5 +34,7 @@ RUN poetry install --no-dev
 RUN python -m spacy download en_core_web_sm
 
 EXPOSE 8888
+
+COPY entrypoint4jupyter.sh ${APP_HOME}/
 
 ENTRYPOINT [ "poetry", "run" ,"python" ]

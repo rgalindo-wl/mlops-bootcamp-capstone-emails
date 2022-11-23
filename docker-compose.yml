@@ -8,6 +8,8 @@ services:
     volumes:
       - ./model/data:/app/data
       - ./model/src:/app/src
+    env_file:
+      - ./model/.env
     ports:
       - 8888:8888
     tty: true
