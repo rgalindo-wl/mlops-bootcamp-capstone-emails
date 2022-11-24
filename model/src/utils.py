@@ -10,8 +10,6 @@ import email
 from nltk.corpus import stopwords
 nltk.download('stopwords')
 
-import vaderSentiment
-
 from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
 analyser = SentimentIntensityAnalyzer()
 

@@ -15,11 +15,10 @@ class Input(BaseModel):
     email: str
 
 class Output(BaseModel):
-    compound: float
     neg: float
-    pos: float
     neu: float
-
+    pos: float
+    compound: float
 
 
 ## FASTapi stuff
