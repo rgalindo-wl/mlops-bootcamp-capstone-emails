@@ -1,0 +1,17 @@
+# Capstone project Team 7
+version: "3.8"
+
+services:
+  model:
+    build:
+      context: ./model
+    volumes:
+      - ./model/data:/app/data
+      - ./model/src:/app/src
+    env_file:
+      - ./model/.env
+    ports:
+      - 8888:8888
+      - 8000:8000
+    tty: true
+
