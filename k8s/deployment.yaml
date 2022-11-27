@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mlops-team-7
+  namespace: mlops
+  labels:
+    app: nginx
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mlops-team-7
+  template:
+    metadata:
+      labels:
+        app: mlops-team-7
+    spec:
+      containers:
+      - name: mlops-team-7
+        image: ealen/echo-server:latest
+        imagePullPolicy: IfNotPresent
+        ports:
+          - containerPort: 80
+        env:
+          - name: PORT
+            value: "80"
