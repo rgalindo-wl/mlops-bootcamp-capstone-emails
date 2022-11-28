@@ -6,6 +6,7 @@ module.exports = {
   theme: {
     extend: {},
     colors: {
+      ...colors,
       purple: {
         100: "#352559",
         200: "#B963F2",
@@ -13,7 +14,6 @@ module.exports = {
         400: "#190E40",
       },
       white: "#F2F2F2",
-      gray: colors.gray,
     },
   },
   plugins: [],
