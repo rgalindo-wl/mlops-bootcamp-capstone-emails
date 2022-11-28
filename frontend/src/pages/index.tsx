@@ -19,7 +19,7 @@ const Home: NextPage = () => {
             Email <span className="text-[#cc66ff]">Sentiment</span> Analysis
           </h1>
           {/* relative before-content-[0] before:bg-white before:absolute before:w-[100%] before:h-[100%] before:rounded-2xl before:z-0 */}
-          <div className="bg-white flex flex-col min-h-[50vh] min-w-[50vw] max-w-[60rem] rounded-2xl shadow-2xl overflow-hidden">
+          <div className="bg-white flex flex-col min-h-[65vh] min-w-[50vw] max-w-[60rem] rounded-2xl shadow-2xl overflow-hidden">
             <div id="top-actions-box" className="flex justify-end gap-1 p-3">
               <div className="p-1 hover:bg-gray-200 rounded-md cursor-pointer">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" className="w-5 h-5 fill-purple-400">
@@ -75,9 +75,6 @@ const Home: NextPage = () => {
                 <input form="email" type="submit" value="Send now" className="bg-purple-400 cursor-pointer px-4 py-2 text-white text-md font-medium rounded-md flex-grow-0" />
               </div>
             </form>
-          </div>
-          <div className="text-white text-4xl font-bold">
-            Result
           </div>
         </div>
       </main>
