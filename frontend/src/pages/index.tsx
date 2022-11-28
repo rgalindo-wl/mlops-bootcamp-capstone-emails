@@ -5,14 +5,29 @@ import { useState } from 'react';
 interface AnalysisResult {
   neg: number;
   neu: number;
-  post: number;
+  pos: number;
   compound: number;
+}
+
+type Color = 'red' | 'yellow' | 'green' | 'gray';
+
+const texts = {
+  op: 'Overwhelmingly positive',
+  vp: 'Very positive',
+  p: 'Positive',
+  sp: 'Slightly positive',
+  nr: 'Neutral',
+  nv: 'Negative',
+  m: 'Very mixed',
 }
 
 const Home: NextPage = () => {
   const [from_, setFrom] = useState('');
   const [to_, setTo] = useState('');
   const [email, setEmail] = useState('');
+  const [text, setText] = useState<string | undefined>(undefined);
+  const [data, setData] = useState<AnalysisResult | undefined>(undefined);
+  const [color, setColor] = useState<Color | undefined>(undefined);
 
   const getSentimentAnalysis = async (): Promise<AnalysisResult> => {
     const { API_URL } = process.env;
@@ -20,8 +35,8 @@ const Home: NextPage = () => {
     if (!API_URL) {
       throw new Error('API URL not set!');
     }
-  
-    const response = await fetch(API_URL, {
+
+    const response = await fetch(`${API_URL}/predict`, {
       method: 'POST',
       body: JSON.stringify({ from_, to_, email }),
     });
@@ -30,6 +45,44 @@ const Home: NextPage = () => {
 
   const handleSubmit = async () => {
     const result = await getSentimentAnalysis();
+
+    const neg = result.neg * 100;
+    const pos = result.pos * 100;
+    const neu = result.neu * 100;
+    setData({ neg, pos, neu, compound: result.compound });
+
+    if (result.compound >= -0.3 && result.compound <= 0.3) {
+      setColor('yellow');
+      setText(texts.nr);
+      return;
+    }
+
+    if (result.compound >= -1 && result.compound < -0.3) {
+      setColor('red');
+      setText(texts.nv);
+      return;
+    }
+
+    setColor('green');
+    if (result.compound > 0.3 && result.compound < 0.5) {
+      setText(texts.sp);
+      return;
+    }
+
+    if (result.compound >= 0.5 && result.compound < 0.75) {
+      setText(texts.p);
+      return;
+    }
+
+    if (result.compound >= 0.75 && result.compound < 0.9) {
+      setText(texts.vp);
+      return;
+    }
+
+    if (result.compound >= 0.9 && result.compound <= 1) {
+      setText(texts.op);
+      return;
+    }
   }
 
   return (
@@ -82,19 +135,28 @@ const Home: NextPage = () => {
               </div>
               <div className="flex-grow-0 gap-5 flex justify-end w-full bg-gray-200 p-5 py-4 items-center">
                 <div className="grow grid grid-cols-12">
-                  <div className="col-span-1">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-9 h-9 stroke-green-400">
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M15.182 15.182a4.5 4.5 0 01-6.364 0M21 12a9 9 0 11-18 0 9 9 0 0118 0zM9.75 9.75c0 .414-.168.75-.375.75S9 10.164 9 9.75 9.168 9 9.375 9s.375.336.375.75zm-.375 0h.008v.015h-.008V9.75zm5.625 0c0 .414-.168.75-.375.75s-.375-.336-.375-.75.168-.75.375-.75.375.336.375.75zm-.375 0h.008v.015h-.008V9.75z" />
-                    </svg>
-                  </div>
-                  <div className="col-span-4 text-gray-600 text-lg flex items-center">
-                    Overwhelmingly positive
-                  </div>
-                  <div className="grid grid-cols-12 relative gap-1 col-span-7 content-center">
-                    <div className="col-span-2 bg-red-400 min-h-[1px] h-[1rem] rounded-md" />
-                    <div className="col-span-4 bg-yellow-400 min-h-[1px] h-[1rem] rounded-md" />
-                    <div className="col-span-6 bg-green-400 min-h-[1px] h-[1rem] rounded-md" />
-                  </div>
+                  {data && text && color && (
+                    <>
+                      <div className="col-span-1">
+                        {color === 'red' ?
+                          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-9 h-9 stroke-red-400">
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M15.182 16.318A4.486 4.486 0 0012.016 15a4.486 4.486 0 00-3.198 1.318M21 12a9 9 0 11-18 0 9 9 0 0118 0zM9.75 9.75c0 .414-.168.75-.375.75S9 10.164 9 9.75 9.168 9 9.375 9s.375.336.375.75zm-.375 0h.008v.015h-.008V9.75zm5.625 0c0 .414-.168.75-.375.75s-.375-.336-.375-.75.168-.75.375-.75.375.336.375.75zm-.375 0h.008v.015h-.008V9.75z" />
+                          </svg> :
+                          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className={`w-9 h-9 stroke-${color}-400`}>
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M15.182 15.182a4.5 4.5 0 01-6.364 0M21 12a9 9 0 11-18 0 9 9 0 0118 0zM9.75 9.75c0 .414-.168.75-.375.75S9 10.164 9 9.75 9.168 9 9.375 9s.375.336.375.75zm-.375 0h.008v.015h-.008V9.75zm5.625 0c0 .414-.168.75-.375.75s-.375-.336-.375-.75.168-.75.375-.75.375.336.375.75zm-.375 0h.008v.015h-.008V9.75z" />
+                          </svg>
+                        }
+                      </div>
+                      <div className="col-span-4 text-gray-600 text-lg flex items-center">
+                        {text}
+                      </div>
+                      <div className="flex relative gap-1 col-span-7 items-center">
+                        <div style={{ width: `${data.neg}%` }} className={` bg-red-400 min-h-[1px] h-[1rem] rounded-md`} />
+                        <div style={{ width: `${data.neu}%` }} className={` bg-yellow-400 min-h-[1px] h-[1rem] rounded-md`} />
+                        <div style={{ width: `${data.pos}%` }} className={` bg-green-400 min-h-[1px] h-[1rem] rounded-md`} />
+                      </div>
+                    </>
+                  )}
                 </div>
                 <input onClick={handleSubmit} type="button" value="Send now" className="bg-purple-400 cursor-pointer px-4 py-2 text-white text-md font-medium rounded-md flex-grow-0" />
               </div>
