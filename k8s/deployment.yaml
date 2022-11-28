@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mlops-team-7
+  namespace: mlops
+  labels:
+    app: nginx
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mlops-team-7
+  template:
+    metadata:
+      labels:
+        app: mlops-team-7
+    spec:
+      containers:
+      - name: mlops-team-7
+        image: rgalindowl/mlops-bootcamp-team7:latest
+        command: ["/bin/bash", "-c"]
+        args: ["uvicorn src.main:app --reload --host 0.0.0.0 --port 80"]
+        ports:
+          - containerPort: 80
+        env:
+          - name: PORT
+            value: "80"
