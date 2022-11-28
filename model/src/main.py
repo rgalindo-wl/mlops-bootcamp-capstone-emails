@@ -1,12 +1,24 @@
 from fastapi import FastAPI
 from pydantic import BaseModel
 from src.utils import sentiment_analyzer_score
+from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
 
 model_name = "Team 7"
 version = "v1.0.0"
 
+origins = [
+    "*"
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 # Ouput for data validation
 class Input(BaseModel):
