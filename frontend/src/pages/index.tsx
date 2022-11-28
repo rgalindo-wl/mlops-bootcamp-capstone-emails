@@ -45,7 +45,6 @@ const Home: NextPage = () => {
 
   const handleSubmit = async () => {
     const result = await getSentimentAnalysis();
-
     const neg = result.neg * 100;
     const pos = result.pos * 100;
     const neu = result.neu * 100;
