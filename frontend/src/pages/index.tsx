@@ -30,7 +30,7 @@ const Home: NextPage = () => {
   const [color, setColor] = useState<Color | undefined>(undefined);
 
   const getSentimentAnalysis = async (): Promise<AnalysisResult> => {
-    const { API_URL } = process.env;
+    const API_URL = 'https://mlops.os.wizeline.io';
 
     if (!API_URL) {
       throw new Error('API URL not set!');
@@ -39,7 +39,11 @@ const Home: NextPage = () => {
     const response = await fetch(`${API_URL}/predict`, {
       method: 'POST',
       body: JSON.stringify({ from_, to_, email }),
+      headers: {
+        'Content-Type': 'application/json',
+      }
     });
+
     return await response.json();
   }
 
@@ -52,34 +56,34 @@ const Home: NextPage = () => {
 
     if (result.compound >= -0.3 && result.compound <= 0.3) {
       setColor('yellow');
-      setText(texts.nr);
+      setText(texts.nr); // Neutral
       return;
     }
 
     if (result.compound >= -1 && result.compound < -0.3) {
       setColor('red');
-      setText(texts.nv);
+      setText(texts.nv); // Negative
       return;
     }
 
     setColor('green');
     if (result.compound > 0.3 && result.compound < 0.5) {
-      setText(texts.sp);
+      setText(texts.sp); // Slightly positive
       return;
     }
 
     if (result.compound >= 0.5 && result.compound < 0.75) {
-      setText(texts.p);
+      setText(texts.p); // Positive
       return;
     }
 
     if (result.compound >= 0.75 && result.compound < 0.9) {
-      setText(texts.vp);
+      setText(texts.vp); // Very positive
       return;
     }
 
     if (result.compound >= 0.9 && result.compound <= 1) {
-      setText(texts.op);
+      setText(texts.op); // Overwhelmingly positive
       return;
     }
   }
