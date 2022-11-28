@@ -1,10 +1,36 @@
 import { type NextPage } from "next";
 import Head from "next/head";
+import { useState } from 'react';
 
-import { trpc } from "../utils/trpc";
+interface AnalysisResult {
+  neg: number;
+  neu: number;
+  post: number;
+  compound: number;
+}
 
 const Home: NextPage = () => {
-  const hello = trpc.example.hello.useQuery({ text: "from tRPC" });
+  const [from_, setFrom] = useState('');
+  const [to_, setTo] = useState('');
+  const [email, setEmail] = useState('');
+
+  const getSentimentAnalysis = async (): Promise<AnalysisResult> => {
+    const { API_URL } = process.env;
+
+    if (!API_URL) {
+      throw new Error('API URL not set!');
+    }
+  
+    const response = await fetch(API_URL, {
+      method: 'POST',
+      body: JSON.stringify({ from_, to_, email }),
+    });
+    return await response.json();
+  }
+
+  const handleSubmit = async () => {
+    const result = await getSentimentAnalysis();
+  }
 
   return (
     <>
@@ -43,18 +69,16 @@ const Home: NextPage = () => {
               <div className="flex flex-col h-full px-6 flex-grow">
                 <div id="from-box" className="flex flex-grow-0 border-b-2 py-3 pt-0 gap-2">
                   <label htmlFor="from-input" className="text-gray-500">From:</label>
-                  <input className="text-gray-800 bg-white px-1 outline-none invalid:outline-1 invalid:outline-red-500 rounded w-full" type="email" name="from-input" id="from-input" />
+                  <input onChange={(e) => setFrom(e.target.value)} value={from_} className="text-gray-800 bg-white px-1 outline-none invalid:outline-1 invalid:outline-red-500 rounded w-full" type="email" name="from-input" id="from-input" />
                 </div>
                 <div id="to-box" className="flex flex-grow-0 border-b-2 py-3 gap-2">
                   <label htmlFor="to-input" className="text-gray-500">To:</label>
-                  <input className="text-gray-800 bg-white px-1 outline-none invalid:outline-1 invalid:outline-red-500 rounded w-full" type="email" name="to-input" id="to-input" />
+                  <input onChange={(e) => setTo(e.target.value)} value={to_} className="text-gray-800 bg-white px-1 outline-none invalid:outline-1 invalid:outline-red-500 rounded w-full" type="email" name="to-input" id="to-input" />
                 </div>
                 <div id="subject-box" className="flex-grow-0 border-b-2 py-3 gap-2">
                   <input className="font-medium bg-white px-1 outline-none invalid:outline-1 invalid:outline-red-500 rounded w-full" type="text" name="subject-input" id="subject-input" placeholder="Subject" />
                 </div>
-                <textarea className="grow py-3 text-gray-800 bg-white outline-none resize-none" placeholder="Write your email">
-                  hola
-                </textarea>
+                <textarea onChange={(e) => setEmail(e.target.value)} value={email} className="grow py-3 text-gray-800 bg-white outline-none resize-none" placeholder="Write your email" />
               </div>
               <div className="flex-grow-0 gap-5 flex justify-end w-full bg-gray-200 p-5 py-4 items-center">
                 <div className="grow grid grid-cols-12">
@@ -72,7 +96,7 @@ const Home: NextPage = () => {
                     <div className="col-span-6 bg-green-400 min-h-[1px] h-[1rem] rounded-md" />
                   </div>
                 </div>
-                <input form="email" type="submit" value="Send now" className="bg-purple-400 cursor-pointer px-4 py-2 text-white text-md font-medium rounded-md flex-grow-0" />
+                <input onClick={handleSubmit} type="button" value="Send now" className="bg-purple-400 cursor-pointer px-4 py-2 text-white text-md font-medium rounded-md flex-grow-0" />
               </div>
             </form>
           </div>
