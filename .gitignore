@@ -3,6 +3,8 @@
 */.ipynb_checkpoints/*
 
 */.env
+*zip
+*csv
 
 .idea/
 .terraform/
